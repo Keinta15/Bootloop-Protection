@@ -1,5 +1,6 @@
 #!/data/adb/magisk/busybox sh
-#Bootloop saver by HuskyDG, modified by ez-me
+# Bootloop saver by HuskyDG, modified by ez-me and modified yet again by Keinta15
+# I'm making these changes just for fun and not to improve the code
 
 # Get variables
 MODPATH=${0%/*}
