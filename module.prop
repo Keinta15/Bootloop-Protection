@@ -1,8 +1,6 @@
-id=simple_bootloopsaver
-name=Simple Bootloop Saver
-version=v2
-versionCode=3
-author=ez-me
-description=Protect your system from bootloop caused by Magisk modules by turning off all your modules and restart your system if bootloop is detected.
-changeBoot=false
-needRamdisk=false
+id=bl_protection
+name=Bootloop Protection
+version=v1 (100)
+versionCode=100
+author=Keinta15
+description=Yet another alternative potection method for Bootloop caused by Magisk modules
