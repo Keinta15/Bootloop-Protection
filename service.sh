@@ -2,11 +2,14 @@
 # Bootloop saver by HuskyDG, modified by ez-me and modified yet again by Keinta15
 # I'm making these changes just for fun and not to improve the code
 
-# Get variables
-MODPATH=${0%/*}
-MESSAGE="$(cat "$MODPATH"/msg.txt | head -c100)"
+# Get the path of the module directory
+MODPATH="${0%/*}"
 
-log "Started"
+# Source utility functions from util_functions.sh
+. "$MODPATH/util_functions.sh"
+
+# Log the start of the script
+log "Script execution started."
 
 # Check for BootLoop
 log "Checking..."
