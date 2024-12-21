@@ -1,4 +1,4 @@
-# Simple BootloopSaver
+# Bootloop Protection
 
 
 ## About
