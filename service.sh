@@ -65,6 +65,6 @@ fi
 modify_description
 
 # If we reached this section, everything is functioning correctly
-log "Script completed successfully. All checks passed!"  # Updated success message
+log "Script completed successfully. All checks passed!"  # Success message
 log "---------------------"  # Add a line for readability in logs
 exit 0  # Exit the script successfully
