@@ -31,18 +31,23 @@ if [ -z "$ZYGOTE_PID1" ]; then
     log "Modules disabled due to Zygote not starting."  # Log the action taken
 fi
 
-if [ "$ZYGOTE_PID1" != "$ZYGOTE_PID2" -o "$ZYGOTE_PID2" != "$ZYGOTE_PID3" ]
-then
-   log "PID mismatch, checking again"
-   sleep 15
-   ZYGOTE_PID4=$(getprop init.svc_debug_pid.zygote)
-   log "PID4: $ZYGOTE_PID4"
+# Check for PID mismatches to detect potential Bootloop
+if [ "$ZYGOTE_PID1" != "$ZYGOTE_PID2" ] || [ "$ZYGOTE_PID2" != "$ZYGOTE_PID3" ]; then
+    log "PID mismatch detected, checking again..."  # Log PID mismatch
+    sleep 15  # Wait for 15 seconds before checking again
+    ZYGOTE_PID4=$(getprop init.svc_debug_pid.zygote)  # Get the fourth PID
+    log "PID4: $ZYGOTE_PID4"
 
-   if [ "$ZYGOTE_PID3" != "$ZYGOTE_PID4" ]
-   then
-      log "They don't match..."
-      disable_modules
-   fi
+    # Check if the last two PIDs match
+    if [ "$ZYGOTE_PID3" != "$ZYGOTE_PID4" ]; then
+        log "PID mismatch persists, disabling modules..."  # Log if there is still a mismatch
+        disable_modules  # Call function to disable modules
+        log "Modules disabled due to persistent PID mismatch."  # Log the action taken
+    else
+        log "PID match confirmed after recheck."  # Log if PIDs match
+    fi
+else
+    log "No PID mismatch detected."  # Log if no mismatch is found
 fi
 
 # If  we reached this section we should be fine
