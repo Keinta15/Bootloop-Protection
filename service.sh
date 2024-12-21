@@ -6,35 +6,12 @@
 MODPATH=${0%/*}
 MESSAGE="$(cat "$MODPATH"/msg.txt | head -c100)"
 
-# Log
-log(){
-   TEXT=$@; echo "[`date -Is`]: $TEXT" >> $MODPATH/log.txt
-}
-
 log "Started"
 
 # Modify description
 cp "$MODPATH/module.prop" "$MODPATH/temp.prop"
 sed -Ei "s/^description=(\[.*][[:space:]]*)?/description=[Working. $MESSAGE] /g" "$MODPATH/temp.prop"
 mv "$MODPATH/temp.prop" "$MODPATH/module.prop"
-
-# Define the function
-disable_modules(){
-   log "Disabling modules..."
-   list="$(find /data/adb/modules/* -prune -type d)"
-   for module in $list
-   do
-      touch $module/disable
-   done
-   rm -rf "$MODPATH/disable"
-   echo "Disabled modules at $(date -Is)" > "$MODPATH/msg.txt"
-   rm -rf /cache/.system_booting /data/unencrypted/.system_booting /metadata/.system_booting /persist/.system_booting /mnt/vendor/persist/.system_booting
-   log "Rebooting"
-   log ""
-   reboot
-   exit
-}
-
 
 # Gather PIDs
 sleep 5
