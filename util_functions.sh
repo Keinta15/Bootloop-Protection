@@ -62,3 +62,9 @@ modify_description() {
     mv "$MODPATH/temp.prop" "$MODPATH/module.prop" || { log "Failed to move temp.prop to module.prop"; exit 1; }
     log "Module description modified successfully."  # Log successful modification
 }
+
+# Cleanup function to remove temporary files
+cleanup() {
+    log "Cleaning up temporary files..."
+    rm -f "$MODPATH/temp.prop"  # Remove the temporary property file if it exists
+}
