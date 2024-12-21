@@ -41,3 +41,10 @@ disable_modules() {
     reboot  # Reboot the system
     exit 0  # Explicitly exit with a success status
 }
+
+# Function to gather Zygote PIDs with a specified sleep time
+gather_zygote_pid() {
+    local sleep_time=$1
+    sleep "$sleep_time"  # Sleep for the specified duration
+    getprop init.svc_debug_pid.zygote  # Get the Zygote process ID
+}
