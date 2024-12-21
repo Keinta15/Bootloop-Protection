@@ -50,7 +50,21 @@ else
     log "No PID mismatch detected."  # Log if no mismatch is found
 fi
 
-# If  we reached this section we should be fine
-log "looks good to me!"
-log ""
-exit
+# Check if status.txt exists and read its content
+if [ -f "$MODPATH/status.txt" ]; then
+    # Read the first 100 characters from status.txt
+    STATUS="$(head -c100 "$MODPATH/status.txt")"
+    log "Read status from status.txt: $STATUS"  # Log the status read
+else
+    # If status.txt does not exist, set STATUS to a default message
+    STATUS="ID: $ZYGOTE_PID1"
+    log "status.txt not found, therefore no bootloop. Identifying $STATUS"  # Log the default status with Zygote ID
+fi
+
+# Call the function to modify the description
+modify_description
+
+# If we reached this section, everything is functioning correctly
+log "Script completed successfully. All checks passed!"  # Updated success message
+log "---------------------"  # Add a line for readability in logs
+exit 0  # Exit the script successfully
