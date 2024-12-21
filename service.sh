@@ -13,19 +13,6 @@ cp "$MODPATH/module.prop" "$MODPATH/temp.prop"
 sed -Ei "s/^description=(\[.*][[:space:]]*)?/description=[Working. $MESSAGE] /g" "$MODPATH/temp.prop"
 mv "$MODPATH/temp.prop" "$MODPATH/module.prop"
 
-# Gather PIDs
-sleep 5
-ZYGOTE_PID1=$(getprop init.svc_debug_pid.zygote)
-log "PID1: $ZYGOTE_PID1"
-
-sleep 15
-ZYGOTE_PID2=$(getprop init.svc_debug_pid.zygote)
-log "PID2: $ZYGOTE_PID2"
-
-sleep 15
-ZYGOTE_PID3=$(getprop init.svc_debug_pid.zygote)
-log "PID3: $ZYGOTE_PID3"
-
 # Check for BootLoop
 log "Checking..."
 
