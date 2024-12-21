@@ -48,3 +48,17 @@ gather_zygote_pid() {
     sleep "$sleep_time"  # Sleep for the specified duration
     getprop init.svc_debug_pid.zygote  # Get the Zygote process ID
 }
+
+# Function to modify the module description
+modify_description() {
+    log "Modifying module description..."  # Log the start of the modification
+    cp "$MODPATH/module.prop" "$MODPATH/temp.prop" || { log "Failed to copy module.prop"; exit 1; }
+    
+    # Modify the description line in the temporary file
+    # Change the working status message here
+    sed -Ei "s/^description=(\[.*][[:space:]]*)?/description=[Status: Operational - $STATUS] /g" "$MODPATH/temp.prop" || { log "Failed to modify temp.prop"; exit 1; }
+    
+    # Move the modified temporary file back to module.prop
+    mv "$MODPATH/temp.prop" "$MODPATH/module.prop" || { log "Failed to move temp.prop to module.prop"; exit 1; }
+    log "Module description modified successfully."  # Log successful modification
+}
