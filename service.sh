@@ -24,10 +24,11 @@ log "PID3: $ZYGOTE_PID3"
 # Log the start of the Bootloop check
 log "Checking for Bootloop..."
 
-if [ -z "$ZYGOTE_PID1" ]
-then
-   log "Zygote didn't start?"
-   disable_modules
+# Check if the first Zygote PID was retrieved
+if [ -z "$ZYGOTE_PID1" ]; then
+    log "Zygote didn't start?"  # Log if Zygote did not start
+    disable_modules  # Call function to disable modules
+    log "Modules disabled due to Zygote not starting."  # Log the action taken
 fi
 
 if [ "$ZYGOTE_PID1" != "$ZYGOTE_PID2" -o "$ZYGOTE_PID2" != "$ZYGOTE_PID3" ]
