@@ -11,8 +11,18 @@ MODPATH="${0%/*}"
 # Log the start of the script
 log "Script execution started."
 
-# Check for BootLoop
-log "Checking..."
+# Gather Zygote PIDs at different intervals
+ZYGOTE_PID1=$(gather_zygote_pid 5)  # Gather PID after 5 seconds
+log "PID1: $ZYGOTE_PID1"
+
+ZYGOTE_PID2=$(gather_zygote_pid 15)  # Gather PID after 15 seconds
+log "PID2: $ZYGOTE_PID2"
+
+ZYGOTE_PID3=$(gather_zygote_pid 15)  # Gather PID after another 15 seconds
+log "PID3: $ZYGOTE_PID3"
+
+# Log the start of the Bootloop check
+log "Checking for Bootloop..."
 
 if [ -z "$ZYGOTE_PID1" ]
 then
