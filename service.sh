@@ -8,11 +8,6 @@ MESSAGE="$(cat "$MODPATH"/msg.txt | head -c100)"
 
 log "Started"
 
-# Modify description
-cp "$MODPATH/module.prop" "$MODPATH/temp.prop"
-sed -Ei "s/^description=(\[.*][[:space:]]*)?/description=[Working. $MESSAGE] /g" "$MODPATH/temp.prop"
-mv "$MODPATH/temp.prop" "$MODPATH/module.prop"
-
 # Check for BootLoop
 log "Checking..."
 
