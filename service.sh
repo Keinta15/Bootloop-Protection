@@ -8,6 +8,9 @@ MODPATH="${0%/*}"
 # Source utility functions from util_functions.sh
 . "$MODPATH/util_functions.sh"
 
+# Trap to ensure cleanup is called on script exit
+trap cleanup EXIT
+
 # Log the start of the script
 log "Script execution started."
 
