@@ -23,5 +23,5 @@ And if Zygote's Process ID doesn't match for 3 times, check the Process ID for n
 
 
 ## Attribution
-Module originally made by [HuskyDG](https://github.com/HuskyDG), but I didn't like how large it was for something that looked like it could be done in less code, so I forked it and made it into just one script.
+Module originally made by [HuskyDG](https://github.com/HuskyDG), and then later modifed by [ez-me](https://github.com/ez-me) because they didn't like how large it was for something that looked like it could be done in less code. 
 This involved removing the custom recovery parts, but for me the AutoDetect has worked.
