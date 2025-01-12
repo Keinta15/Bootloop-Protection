@@ -1,7 +1,7 @@
 id=bl_protection
 name=Bootloop Protection
-version=v1.6 (161)
-versionCode=161
+version=v1.8 (180)
+versionCode=180
 author=Keinta15
 description=Yet another alternative protection method for bootloops caused by Magisk modules
 updateJson=https://raw.githubusercontent.com/Keinta15/Bootloop-Protection/refs/heads/master/update.json
