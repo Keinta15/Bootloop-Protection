@@ -34,6 +34,14 @@ fi
 enable_list=""
 disable_list=""
 
+# File to track disabled modules by this script
+DISABLED_TRACK_FILE="$SELF/disabled_modules.txt"
+
+# Create the track file if it doesn't exist
+if [ ! -f "$DISABLED_TRACK_FILE" ]; then
+    touch "$DISABLED_TRACK_FILE"
+fi
+
 # Find all modules and classify them
 for i in "$MODPATH"/../*; do
     if [ -d "$i" ]; then
@@ -50,21 +58,35 @@ for i in "$MODPATH"/../*; do
             MODULE_NAME=$(basename "$i")  # Fallback to directory name
         fi
 
-        # Check module status and queue for enabling or disabling
+        # Check if module is already disabled by the script
         if [ -f "$i/disable" ]; then
-            echo "Queuing module for enabling: $MODULE_NAME"
-            enable_list="$i/disable $enable_list"
+            # Check if the module was disabled by this script (it must be in the tracking file)
+            if grep -q "^$i$" "$DISABLED_TRACK_FILE"; then
+                echo "Module $MODULE_NAME was disabled by this script. Queuing for enabling."
+                enable_list="$i $enable_list"
+            else
+                echo "Module $MODULE_NAME was disabled by something else. Skipping enabling."
+            fi
         elif [ ! -f "$i/disable" ]; then
-            echo "Queuing module for disabling: $MODULE_NAME"
-            disable_list="$i/disable $disable_list"
+            # Only disable modules that are not already disabled by the script
+            echo "Module $MODULE_NAME is not disabled. Queuing for disabling."
+            disable_list="$disable_list $i"  # Add to disable list
         fi
     fi
 done
 
-# Enable previously disabled modules
+# Enable previously disabled modules by this script
 if [ -n "$enable_list" ]; then
-    echo "Enabling queued modules..."
-    rm -f $enable_list || echo "Failed to enable some modules"
+    echo "Enabling modules disabled by this script..."
+    for module in $enable_list; do
+        # Enable the module (remove the disable file)
+        if [ -f "$module/disable" ]; then
+            rm -f "$module/disable" || echo "Failed to enable module: $module"
+            echo "Enabled module: $(basename "$module")"
+            # Remove the module from the track file after enabling it
+            sed -i "\|$module|d" "$DISABLED_TRACK_FILE"
+        fi
+    done
 else
     echo "No modules to enable"
 fi
@@ -72,7 +94,11 @@ fi
 # Disable modules queued for disabling
 if [ -n "$disable_list" ]; then
     echo "Disabling queued modules..."
-    touch $disable_list || echo "Failed to disable some modules"
+    for module in $disable_list; do
+        touch "$module/disable" || echo "Failed to disable module: $module"
+        echo "$module" >> "$DISABLED_TRACK_FILE"  # Append to the tracking file
+        echo "Disabled module: $(basename "$module")"
+    done
 else
     echo "No modules to disable"
 fi
