@@ -1,7 +1,7 @@
 ## Changelog
 
 v1.8: 
-Changes to Action.sh
+Improve Action.sh
 - Added script header with metadata.
 - Excluded the bl_protection module from being disabled.
 - Introduced disabled_modules.txt for tracking disabled modules.
