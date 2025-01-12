@@ -61,7 +61,7 @@ for i in "$MODPATH"/../*; do
         # Check if module is already disabled by the script
         if [ -f "$i/disable" ]; then
             # Check if the module was disabled by this script (it must be in the tracking file)
-            if grep -q "^$i$" "$DISABLED_TRACK_FILE"; then
+            if grep -q "^$MODULE_NAME$" "$DISABLED_TRACK_FILE"; then
                 echo "Module $MODULE_NAME was disabled by this script. Queuing for enabling."
                 enable_list="$i $enable_list"
             else
@@ -69,8 +69,10 @@ for i in "$MODPATH"/../*; do
             fi
         elif [ ! -f "$i/disable" ]; then
             # Only disable modules that are not already disabled by the script
-            echo "Module $MODULE_NAME is not disabled. Queuing for disabling."
-            disable_list="$disable_list $i"  # Add to disable list
+            if ! grep -q "^$MODULE_NAME$" "$DISABLED_TRACK_FILE"; then
+                echo "Module $MODULE_NAME is not disabled. Queuing for disabling."
+                disable_list="$i $disable_list"  # Add to disable list
+            fi
         fi
     fi
 done
@@ -78,30 +80,33 @@ done
 # Enable previously disabled modules by this script
 if [ -n "$enable_list" ]; then
     echo "Enabling modules disabled by this script..."
-    for module in $enable_list; do
-        # Enable the module (remove the disable file)
-        if [ -f "$module/disable" ]; then
-            rm -f "$module/disable" || echo "Failed to enable module: $module"
-            echo "Enabled module: $(basename "$module")"
+    for module_dir in $enable_list; do
+        # Extract the module name from module.prop
+        MODULE_NAME=$(grep '^name=' "$module_dir/module.prop" | cut -d '=' -f 2)
+        if [ -f "$module_dir/disable" ]; then
+            rm -f "$module_dir/disable" || echo "Failed to enable module: $MODULE_NAME"
+            echo "Enabled module: $MODULE_NAME"
             # Remove the module from the track file after enabling it
-            sed -i "\|$module|d" "$DISABLED_TRACK_FILE"
+            sed -i "\|$MODULE_NAME|d" "$DISABLED_TRACK_FILE"
         fi
     done
-else
-    echo "No modules to enable"
 fi
 
 # Disable modules queued for disabling
 if [ -n "$disable_list" ]; then
     echo "Disabling queued modules..."
-    for module in $disable_list; do
-        touch "$module/disable" || echo "Failed to disable module: $module"
-        echo "$module" >> "$DISABLED_TRACK_FILE"  # Append to the tracking file
-        echo "Disabled module: $(basename "$module")"
+    for module_dir in $disable_list; do
+        # Extract the module name from module.prop
+        MODULE_NAME=$(grep '^name=' "$module_dir/module.prop" | cut -d '=' -f 2)
+        touch "$module_dir/disable" || echo "Failed to disable module: $MODULE_NAME"
+        echo "$MODULE_NAME" >> "$DISABLED_TRACK_FILE"  # Append to the tracking file
+        echo "Disabled module: $MODULE_NAME"
     done
-else
-    echo "No modules to disable"
 fi
+
+# Debugging Output
+# echo "Enable List: $enable_list"
+# echo "Disable List: $disable_list"
 
 echo "Module management process complete."
 
