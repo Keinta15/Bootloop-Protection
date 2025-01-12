@@ -58,6 +58,9 @@ for i in "$MODPATH"/../*; do
             MODULE_NAME=$(basename "$i")  # Fallback to directory name
         fi
 
+        # Trim any trailing whitespace or newline from the module name
+        MODULE_NAME=$(echo "$MODULE_NAME" | tr -d '\n' | sed 's/[[:space:]]*$//')
+
         # Check if module is already disabled by the script
         if [ -f "$i/disable" ]; then
             # Check if the module was disabled by this script (it must be in the tracking file)
@@ -83,13 +86,15 @@ if [ -n "$enable_list" ]; then
     for module_dir in $enable_list; do
         # Extract the module name from module.prop
         MODULE_NAME=$(grep '^name=' "$module_dir/module.prop" | cut -d '=' -f 2)
+        MODULE_NAME=$(echo "$MODULE_NAME" | tr -d '\n' | sed 's/[[:space:]]*$//')  # Trim any extra whitespace
         if [ -f "$module_dir/disable" ]; then
             rm -f "$module_dir/disable" || echo "Failed to enable module: $MODULE_NAME"
             echo "Enabled module: $MODULE_NAME"
-            # Remove the module from the track file after enabling it
-            sed -i "\|$MODULE_NAME|d" "$DISABLED_TRACK_FILE"
+            # Remove the track file after enabling them
+            rm -f "$DISABLED_TRACK_FILE"
         fi
     done
+    echo "Deleted disabled_modules.txt file"
 fi
 
 # Disable modules queued for disabling
@@ -98,10 +103,12 @@ if [ -n "$disable_list" ]; then
     for module_dir in $disable_list; do
         # Extract the module name from module.prop
         MODULE_NAME=$(grep '^name=' "$module_dir/module.prop" | cut -d '=' -f 2)
+        MODULE_NAME=$(echo "$MODULE_NAME" | tr -d '\n' | sed 's/[[:space:]]*$//')  # Trim any extra whitespace
         touch "$module_dir/disable" || echo "Failed to disable module: $MODULE_NAME"
         echo "$MODULE_NAME" >> "$DISABLED_TRACK_FILE"  # Append to the tracking file
         echo "Disabled module: $MODULE_NAME"
     done
+    echo "Added modules to disabled_modules.txt file"
 fi
 
 # Debugging Output
