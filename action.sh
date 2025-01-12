@@ -90,7 +90,7 @@ if [ -n "$enable_list" ]; then
         if [ -f "$module_dir/disable" ]; then
             rm -f "$module_dir/disable" || echo "Failed to enable module: $MODULE_NAME"
             echo "Enabled module: $MODULE_NAME"
-            # Remove the track file after enabling them
+            # Remove the track file after enabling them, this is to prevent manually enabled modules from being disabled 
             rm -f "$DISABLED_TRACK_FILE"
         fi
     done
