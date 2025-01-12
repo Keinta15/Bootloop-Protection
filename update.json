@@ -1,6 +1,6 @@
 {
-  "version": "v1.6 (161)",
-  "versionCode": 161,
-  "zipUrl": "https://github.com/Keinta15/Bootloop-Protection/releases/download/v1.6/Bootloop-Protection-1.6.zip",
-  "changelog": ""
+  "version": "v1.8 (180)",
+  "versionCode": 180,
+  "zipUrl": "https://github.com/Keinta15/Bootloop-Protection/releases/download/v1.8/Bootloop-Protection-1.8.zip",
+  "changelog": "https://raw.githubusercontent.com/Keinta15/Bootloop-Protection/refs/heads/master/changelog.md"
 }
