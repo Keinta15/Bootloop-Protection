@@ -1,7 +1,7 @@
 # Log function to write messages to logs.txt
 log() {
     local TEXT="$@"
-    echo "[`date -Is`]: $TEXT" >> "$MODPATH/logs.txt"
+    echo "[`date -Is`]: $TEXT" >> "$MODPATH/logs.log"
 }
 
 # Function to disable modules when bootloop is detected
